@@ -9,7 +9,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
-
+import javax.swing.table.DefaultTableModel;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -22,11 +22,11 @@ import java.util.Iterator;
 import java.util.List; 
 import java.util.stream.Collectors;
 
-
 /**
  *
  * @author user
  */
+
 public class Parkingsystem extends JFrame implements ActionListener{
 
     /*
@@ -73,8 +73,9 @@ public class Parkingsystem extends JFrame implements ActionListener{
         
         if(e.getSource() == frame.configureButton) {
             parkConfiguration = new ParkConfiguration(nRows, nCols, maxDays);
+            parkConfiguration.fillTable(parkedSlots);
             parkConfiguration.setVisible(true);
-            
+            JOptionPane.showMessageDialog(null,"Warning!! If you change the dimensions of the parking space all the parked vehicles will be removed.","Warning configuration!!", JOptionPane.WARNING_MESSAGE);            
             
             parkConfiguration.cancelButton.addActionListener( new ActionListener() {
                 public void actionPerformed(ActionEvent evt) {
@@ -84,12 +85,55 @@ public class Parkingsystem extends JFrame implements ActionListener{
             
             parkConfiguration.confirmChangesButton.addActionListener( new ActionListener() {
                 public void actionPerformed(ActionEvent evt) {
+                    int j = 0, sz = parkedSlots.size();
+                    for(int i = 0; i < sz; i++) {
+                        if((boolean)parkConfiguration.model.getValueAt(i,4)) {
+                            String parkingId = parkConfiguration.model.getValueAt(i,0).toString();
+                            int x = Character.getNumericValue(parkingId.charAt(0)), y = Character.getNumericValue(parkingId.charAt(2));
+                            parkedSlots.remove(i-j);
+                            ParkingLot.get(x).set(y,new parkingSlot(Integer.toString(x) + "-" + Integer.toString(y)));
+                            availableSlots.add(new Point(x,y));
+                            j++;
+                        }
+                    }
+                    System.out.println(parkedSlots);
                     int[] options = {2,3,4,5,6,7,8};
-                    nRows = options[parkConfiguration.rowComboBox.getSelectedIndex()];
-                    nCols = options[parkConfiguration.colComboBox.getSelectedIndex()];
-                    maxDays = Integer.parseInt(parkConfiguration.maxTimeTextField.getText());
+                    if( nRows != options[parkConfiguration.rowComboBox.getSelectedIndex()] || nCols != options[parkConfiguration.colComboBox.getSelectedIndex()]) {
+                        nRows = options[parkConfiguration.rowComboBox.getSelectedIndex()];
+                        nCols = options[parkConfiguration.colComboBox.getSelectedIndex()];
+                        maxDays = Integer.parseInt(parkConfiguration.maxTimeTextField.getText());
+                        constructPark();
+                    }
                     parkConfiguration.dispose();
-                    constructPark();
+                }
+            });
+            
+            parkConfiguration.toExtensionButton.addActionListener( new ActionListener() {
+                public void actionPerformed(ActionEvent evt) {
+                    extensionPane = new bookingExtensionPane(maxDays);
+                    extensionPane.setVisible(true);
+                    extensionPane.doneButton.addActionListener( new ActionListener() {
+                        public void actionPerformed(ActionEvent evt) {
+                            String parkingId = extensionPane.parkingSlotField.getText();
+                            for(parkingSlot slot : parkedSlots) {
+                                if(slot.getParkingId().equals(parkingId)) {
+                                    slot.setExpiryDate(extensionPane.expiryDate.getDate());
+                                    sortParkedSlots(parkedSlots);
+                                    parkConfiguration.fillTable(parkedSlots);
+                                    int x = Character.getNumericValue(parkingId.charAt(0)), y = Character.getNumericValue(parkingId.charAt(2));
+                                    ParkingLot.get(x).set(y,slot);
+                                    break;
+                                }
+                            }
+                            extensionPane.dispose();
+                        }
+                    });
+            
+                    extensionPane.cancelButton.addActionListener( new ActionListener() {
+                        public void actionPerformed(ActionEvent evt) {
+                            extensionPane.dispose();
+                        }
+                    });                    
                 }
             });
             
@@ -99,10 +143,15 @@ public class Parkingsystem extends JFrame implements ActionListener{
                 }
             });
             
+           
             return;
         }
         
         if(e.getSource() == frame.registerButton) {
+            if(availableSlots.size() == 0) {
+                JOptionPane.showMessageDialog(null,"No Parking Slots are Available till " + parkedSlots.get(0).getExpiryDate() +".", "Error: no slot available", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
             Registry registryWindow = new Registry(maxDays);
 
             registryWindow.setVisible(true);
@@ -190,6 +239,7 @@ public class Parkingsystem extends JFrame implements ActionListener{
     ParkConfiguration parkConfiguration;
     Registry registryWindow;
     DisplayPanel parkingPanel;
+    bookingExtensionPane extensionPane;
     ArrayList<ArrayList<parkingSlot> > ParkingLot = new ArrayList<ArrayList<parkingSlot>>();
     ArrayList<parkingSlot> parkedSlots = new ArrayList<parkingSlot>();
     Queue<Point> availableSlots = new LinkedList<>();
@@ -205,7 +255,6 @@ public class Parkingsystem extends JFrame implements ActionListener{
             ParkingLot.get(x).set(y,newparkingSlot);
             parkedSlots.add(newparkingSlot);
             sortParkedSlots(parkedSlots);
-            System.out.println(newparkingSlot.getExpiryDate());
             return;
         } 
     }

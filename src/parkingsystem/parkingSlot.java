@@ -60,5 +60,8 @@ public class parkingSlot {
         return this.expiryDate;
     }
     
+    public void setExpiryDate(Date date) {
+        this.expiryDate = date;
+    }
     
 }
