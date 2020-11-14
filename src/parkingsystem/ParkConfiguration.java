@@ -82,9 +82,9 @@ public class ParkConfiguration extends javax.swing.JFrame {
 
         timeLabel.setFont(new java.awt.Font("Yu Gothic UI Semibold", 0, 14)); // NOI18N
         timeLabel.setForeground(new java.awt.Color(51, 51, 51));
-        timeLabel.setText("Maximum Time Allowed");
+        timeLabel.setText("Maximum Days Allowed");
 
-        rowComboBox.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "2", "3", "4", "5", "6", "7", "8" }));
+        rowComboBox.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "2", "3", "4", "5", "6" }));
         rowComboBox.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
         rowComboBox.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -92,7 +92,7 @@ public class ParkConfiguration extends javax.swing.JFrame {
             }
         });
 
-        colComboBox.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "2", "3", "4", "5", "6", "7" }));
+        colComboBox.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "2", "3", "4", "5", "6" }));
         colComboBox.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
 
         maxTimeTextField.setHorizontalAlignment(javax.swing.JTextField.CENTER);

@@ -7,6 +7,7 @@ package parkingsystem;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
@@ -21,6 +22,7 @@ import java.util.Comparator;
 import java.util.Iterator; 
 import java.util.List; 
 import java.util.stream.Collectors;
+import java.util.regex.*;
 
 /**
  *
@@ -169,14 +171,23 @@ public class Parkingsystem extends JFrame implements ActionListener{
             
             registryWindow.submitButton.addActionListener(new ActionListener() {
                 public void actionPerformed(ActionEvent evt) {
-                    fillParkingSlot( true, registryWindow.nameField.getText(), registryWindow.contactnoField.getText(), registryWindow.vehicleIdField.getText(), registryWindow.emailidField.getText(), registryWindow.expiryDate.getDate());
-                    registryWindow.nameField.setText("");
-                    registryWindow.vehicleIdField.setText("");
-                    registryWindow.contactnoField.setText("");     
-                    registryWindow.emailidField.setText("");
-                    registryWindow.issueDate.setDate(new Date());
-                    registryWindow.expiryDate.setDate(new Date());
-                    registryWindow.dispose();
+                    if(performValidations( registryWindow.nameField.getText(), registryWindow.contactnoField.getText(), registryWindow.vehicleIdField.getText(), registryWindow.emailidField.getText())) {
+                        fillParkingSlot( true, registryWindow.nameField.getText(), registryWindow.contactnoField.getText(), registryWindow.vehicleIdField.getText(), registryWindow.emailidField.getText(), registryWindow.expiryDate.getDate());
+                        registryWindow.nameField.setText("");
+                        registryWindow.vehicleIdField.setText("");
+                        registryWindow.contactnoField.setText("");     
+                        registryWindow.emailidField.setText("");
+                        registryWindow.issueDate.setDate(new Date());
+                        registryWindow.expiryDate.setDate(new Date());
+                        registryWindow.dispose();
+                    } else {
+                        registryWindow.nameField.setText("");
+                        registryWindow.vehicleIdField.setText("");
+                        registryWindow.contactnoField.setText("");     
+                        registryWindow.emailidField.setText("");
+                        registryWindow.issueDate.setDate(new Date());
+                        registryWindow.expiryDate.setDate(new Date());
+                    }
                 }
             });
             
@@ -279,4 +290,41 @@ public class Parkingsystem extends JFrame implements ActionListener{
         Comparator<parkingSlot> dateComparator = (p1,p2) -> p1.getExpiryDate().compareTo(p2.getExpiryDate());
         parkedSlots.sort(dateComparator);
     }
+    
+    
+    public boolean performValidations(String name, String contactNo, String vehicleID, String emailId) {
+        boolean validationSuccess = true;
+        String regx = "^[\\p{L} .'-]+$";
+        Pattern p = Pattern.compile(regx);
+        Matcher m = p.matcher(name);
+        if(!m.matches()) {
+            validationSuccess = false;
+            JOptionPane.showMessageDialog(null,"Invalid Name. \n (1) Name should not be empty\n (2) All words start with capital Letters\n (3) No Special Characters\n (4) No digits\n", "Validation Error!!", JOptionPane.ERROR_MESSAGE);            
+        } 
+        
+        regx = "^[6-9]\\d{9}$";
+        p = Pattern.compile(regx);
+        m = p.matcher(contactNo);
+        if(!m.matches()) {  
+            validationSuccess = false;
+            JOptionPane.showMessageDialog(null,"Invalid Phone Number. \n (1) Phone Number should not be empty\n (2) The Phone Number should be 10 digits long\n Please check your Phone number and try again.\n", "Validation Error!!", JOptionPane.ERROR_MESSAGE);            
+        }
+        
+        regx = "^[A-Z]{2,3}\\s[0-9]{1,2}\\s[A-Z]{0,3}\\s[0-9]{4}$";
+        p = Pattern.compile(regx);
+        m = p.matcher(vehicleID);
+        if(!m.matches()) {
+            validationSuccess = false;
+            JOptionPane.showMessageDialog(null,"Invalid Vehicle ID. \nVehicle ID should be of the format: MH(State Code)01(District Number) AW(series of RTO) 0121(Random Number)\n", "Validation Error!!", JOptionPane.ERROR_MESSAGE);            
+        }
+        
+        regx = "[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?";
+        p = Pattern.compile(regx,Pattern.CASE_INSENSITIVE);
+        m = p.matcher(emailId);
+        if(!m.matches()) {
+            validationSuccess = false;
+            JOptionPane.showMessageDialog(null,"Invalid Email Id. \nPlease try Again!!","Warning configuration!!", JOptionPane.ERROR_MESSAGE); 
+        }
+        return validationSuccess;
+    } 
 } 

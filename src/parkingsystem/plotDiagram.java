@@ -7,7 +7,21 @@
 package parkingsystem;
 import java.awt.GridLayout;
 import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+
+import javax.swing.JOptionPane;
+import javax.swing.BorderFactory;
+import javax.swing.BoxLayout;
+import javax.swing.JLabel;
+import javax.swing.ImageIcon;
+import javax.swing.JButton;
+
+import java.util.Date;
 import java.util.ArrayList;
+
+import java.text.SimpleDateFormat;
 /**
  *
  * @author user
@@ -40,11 +54,11 @@ public class plotDiagram extends javax.swing.JFrame {
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-            .add(0, 701, Short.MAX_VALUE)
+            .add(0, 823, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-            .add(0, 626, Short.MAX_VALUE)
+            .add(0, 712, Short.MAX_VALUE)
         );
 
         pack();
@@ -88,16 +102,60 @@ public class plotDiagram extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     // End of variables declaration//GEN-END:variables
 
+    JLabel statusLabel;
+    ImageIcon image;
+    JButton displayStatusButton;
+    SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
     
     public void displayParkingLot(int nRows, int nCols, ArrayList<ArrayList<parkingSlot> > ParkingLot) {
         for( int i = 0; i < nRows; i++) {
             for( int j = 0; j < nCols; j++) {
                 javax.swing.JPanel parkingPanel = new javax.swing.JPanel();
+                parkingPanel.setLayout(new BoxLayout(parkingPanel, BoxLayout.Y_AXIS));
                 if(ParkingLot.get(i).get(j).filled) {
+                    statusLabel = new JLabel();
+                    displayStatusButton = new JButton("See More..");
+                    if(nRows > 4) {
+                        image = new ImageIcon("C:\\Users\\user\\Desktop\\Parkingsystem\\src\\img\\Garage-medium.png");
+                    } else {
+                        image = new ImageIcon("C:\\Users\\user\\Desktop\\Parkingsystem\\src\\img\\Garage.png");
+                    }
+                    statusLabel.setIcon(image);
+                    statusLabel.setAlignmentX(CENTER_ALIGNMENT);
+                    displayStatusButton.setFocusable(false);
+                    displayStatusButton.setBackground(Color.WHITE);
+                    displayStatusButton.setBorder(BorderFactory.createRaisedBevelBorder());
+                    displayStatusButton.setAlignmentX(CENTER_ALIGNMENT);
+                    displayStatusButton.setAlignmentY(BOTTOM_ALIGNMENT);
+                    displayStatusButton.setPreferredSize(new Dimension(30,10));
+                    String parkingId = ParkingLot.get(i).get(j).getParkingId() ;
+                    String vehicleId = ParkingLot.get(i).get(j).getVehicleId();
+                    String date = dateFormat.format(ParkingLot.get(i).get(j).getExpiryDate());
+                    displayStatusButton.addActionListener(new ActionListener() {
+                        public void actionPerformed(ActionEvent e) {
+                            JOptionPane.showMessageDialog(null,"Parking Slot id: " + parkingId + "\n" + "Vehicle ID: " + vehicleId + "\n" + "Expiry Date: " + date + "\n"
+                                    , "Parking Slot Information", JOptionPane.INFORMATION_MESSAGE);
+                        }
+                    });
+                    
+                    parkingPanel.add(statusLabel);
+                    parkingPanel.add(displayStatusButton);
                     parkingPanel.setBackground(Color.red);
+                    
                 } else {
+                    statusLabel = new JLabel();
+                    if(nRows > 4) {
+                        image = new ImageIcon("C:\\Users\\user\\Desktop\\Parkingsystem\\src\\img\\available-medium.png");
+                    }   else {
+                        image = new ImageIcon("C:\\Users\\user\\Desktop\\Parkingsystem\\src\\img\\available-big.png");
+                    }
+                    statusLabel.setIcon(image);
+                    statusLabel.setAlignmentX(CENTER_ALIGNMENT);                    
+                    parkingPanel.add(statusLabel);
                     parkingPanel.setBackground(Color.green);
                 }
+                parkingPanel.setAlignmentX(CENTER_ALIGNMENT);
+                parkingPanel.setAlignmentY(BOTTOM_ALIGNMENT);
                 this.add(parkingPanel);
             }
         }
@@ -107,11 +165,23 @@ public class plotDiagram extends javax.swing.JFrame {
         for( int i = 0; i < nRows; i++) {
             for( int j = 0; j < nCols; j++) {
                 javax.swing.JPanel parkingPanel = new javax.swing.JPanel();
+                parkingPanel.setLayout(new BoxLayout(parkingPanel, BoxLayout.Y_AXIS));
                 if(ParkingLot.get(i).get(j).filled) {
                     parkingPanel.setBackground(Color.WHITE);
                 } else {
+                    statusLabel = new JLabel();
+                    if(nRows > 4) {
+                        image = new ImageIcon("C:\\Users\\user\\Desktop\\Parkingsystem\\src\\img\\available-medium.png");
+                    }   else {
+                        image = new ImageIcon("C:\\Users\\user\\Desktop\\Parkingsystem\\src\\img\\available-big.png");
+                    }
+                    statusLabel.setIcon(image);
+                    statusLabel.setAlignmentX(CENTER_ALIGNMENT);                    
+                    parkingPanel.add(statusLabel);
                     parkingPanel.setBackground(Color.green);
                 }
+                parkingPanel.setAlignmentX(CENTER_ALIGNMENT);
+                parkingPanel.setAlignmentY(BOTTOM_ALIGNMENT);
                 this.add(parkingPanel);
             }
         }
@@ -121,11 +191,40 @@ public class plotDiagram extends javax.swing.JFrame {
         for( int i = 0; i < nRows; i++) {
             for( int j = 0; j < nCols; j++) {
                 javax.swing.JPanel parkingPanel = new javax.swing.JPanel();
+                displayStatusButton = new JButton("See More..");
+                parkingPanel.setLayout(new BoxLayout(parkingPanel, BoxLayout.Y_AXIS));
                 if(ParkingLot.get(i).get(j).filled) {
+                    statusLabel = new JLabel();
+                    if(nRows > 4) {
+                        image = new ImageIcon("C:\\Users\\user\\Desktop\\Parkingsystem\\src\\img\\Garage-medium.png");
+                    } else {
+                        image = new ImageIcon("C:\\Users\\user\\Desktop\\Parkingsystem\\src\\img\\Garage.png");
+                    }
+                    statusLabel.setIcon(image);
+                    statusLabel.setAlignmentX(CENTER_ALIGNMENT); 
+                    displayStatusButton.setFocusable(false);
+                    displayStatusButton.setBackground(Color.WHITE);
+                    displayStatusButton.setBorder(BorderFactory.createRaisedBevelBorder());
+                    displayStatusButton.setAlignmentX(CENTER_ALIGNMENT);
+                    displayStatusButton.setAlignmentY(BOTTOM_ALIGNMENT);
+                    displayStatusButton.setPreferredSize(new Dimension(30,10));
+                    String parkingId = ParkingLot.get(i).get(j).getParkingId() ;
+                    String vehicleId = ParkingLot.get(i).get(j).getVehicleId();
+                    String date = dateFormat.format(ParkingLot.get(i).get(j).getExpiryDate());
+                    displayStatusButton.addActionListener(new ActionListener() {
+                        public void actionPerformed(ActionEvent e) {
+                            JOptionPane.showMessageDialog(null,"Parking Slot id: " + parkingId + "\n" + "Vehicle ID: " + vehicleId + "\n" + "Expiry Date: " + date + "\n"
+                                    , "Parking Slot Information", JOptionPane.INFORMATION_MESSAGE);
+                        }
+                    });
+                    parkingPanel.add(statusLabel);
+                    parkingPanel.add(displayStatusButton);
                     parkingPanel.setBackground(Color.red);
                 } else {
                     parkingPanel.setBackground(Color.WHITE);
                 }
+                parkingPanel.setAlignmentX(CENTER_ALIGNMENT);
+                parkingPanel.setAlignmentY(BOTTOM_ALIGNMENT);
                 this.add(parkingPanel);
             }
         }

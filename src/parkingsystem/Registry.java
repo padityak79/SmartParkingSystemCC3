@@ -25,6 +25,7 @@ public class Registry extends javax.swing.JFrame {
         initComponents();
         ZoneId defaultZoneId = ZoneId.systemDefault();
         expiryDate.setMinSelectableDate(new Date());
+        expiryDate.setDate(new Date());
         expiryDate.setMaxSelectableDate(Date.from(LocalDate.now().plusDays(maxDays).atStartOfDay(defaultZoneId).toInstant()));
     }   
     
@@ -55,6 +56,13 @@ public class Registry extends javax.swing.JFrame {
         expiryDate = new com.toedter.calendar.JDateChooser();
         resetexpDatebutton = new javax.swing.JButton();
         backButton = new javax.swing.JButton();
+        jLabel1 = new javax.swing.JLabel();
+        jLabel2 = new javax.swing.JLabel();
+        jLabel3 = new javax.swing.JLabel();
+        jLabel4 = new javax.swing.JLabel();
+        jLabel5 = new javax.swing.JLabel();
+        jLabel6 = new javax.swing.JLabel();
+        jLabel7 = new javax.swing.JLabel();
 
         setResizable(false);
 
@@ -139,58 +147,120 @@ public class Registry extends javax.swing.JFrame {
         backButton.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
         backButton.setFocusable(false);
 
+        jLabel1.setFont(new java.awt.Font("Tahoma", 2, 12)); // NOI18N
+        jLabel1.setForeground(new java.awt.Color(255, 51, 51));
+        jLabel1.setText("*");
+
+        jLabel2.setFont(new java.awt.Font("Tahoma", 2, 12)); // NOI18N
+        jLabel2.setForeground(new java.awt.Color(255, 51, 51));
+        jLabel2.setText("*");
+
+        jLabel3.setFont(new java.awt.Font("Tahoma", 2, 12)); // NOI18N
+        jLabel3.setForeground(new java.awt.Color(255, 51, 51));
+        jLabel3.setText("*");
+
+        jLabel4.setFont(new java.awt.Font("Tahoma", 2, 12)); // NOI18N
+        jLabel4.setForeground(new java.awt.Color(255, 51, 51));
+        jLabel4.setText("*");
+
+        jLabel5.setFont(new java.awt.Font("Tahoma", 2, 12)); // NOI18N
+        jLabel5.setForeground(new java.awt.Color(255, 51, 51));
+        jLabel5.setText("*");
+
+        jLabel6.setFont(new java.awt.Font("Yu Gothic UI Semibold", 0, 14)); // NOI18N
+        jLabel6.setForeground(new java.awt.Color(51, 51, 51));
+        jLabel6.setText("Denotes that these fields are compulsary.");
+
+        jLabel7.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
+        jLabel7.setForeground(new java.awt.Color(255, 51, 51));
+        jLabel7.setText("*");
+
         org.jdesktop.layout.GroupLayout parkingRegistrationPanelLayout = new org.jdesktop.layout.GroupLayout(parkingRegistrationPanel);
         parkingRegistrationPanel.setLayout(parkingRegistrationPanelLayout);
         parkingRegistrationPanelLayout.setHorizontalGroup(
             parkingRegistrationPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
             .add(parkingRegistrationPanelLayout.createSequentialGroup()
-                .addContainerGap()
+                .add(25, 25, 25)
                 .add(parkingRegistrationPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.TRAILING, false)
-                    .add(expiryDateLabel, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .add(parkingRegistrationPanelLayout.createSequentialGroup()
+                        .add(expiryDateLabel, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
+                        .add(jLabel4, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 21, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
                     .add(issueDatelabel, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .add(org.jdesktop.layout.GroupLayout.LEADING, NameLabel, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .add(org.jdesktop.layout.GroupLayout.LEADING, vehicleIdLabel, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .add(org.jdesktop.layout.GroupLayout.LEADING, contactNoLabel, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .add(org.jdesktop.layout.GroupLayout.LEADING, EmailIdLabel, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .add(28, 28, 28)
-                .add(parkingRegistrationPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.TRAILING)
-                    .add(org.jdesktop.layout.GroupLayout.LEADING, expiryDate, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .add(org.jdesktop.layout.GroupLayout.LEADING, issueDate, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .add(nameField)
-                    .add(vehicleIdField)
-                    .add(emailidField)
-                    .add(contactnoField))
-                .add(18, 18, 18)
-                .add(resetexpDatebutton, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 63, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
-                .add(16, 16, 16))
-            .add(org.jdesktop.layout.GroupLayout.TRAILING, parkingRegistrationPanelLayout.createSequentialGroup()
-                .add(62, 62, 62)
-                .add(backButton, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 107, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
-                .add(18, 18, 18)
-                .add(resetFieldButton, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 130, Short.MAX_VALUE)
-                .add(18, 18, 18)
-                .add(submitButton, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 109, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
-                .add(30, 30, 30))
+                    .add(org.jdesktop.layout.GroupLayout.LEADING, parkingRegistrationPanelLayout.createSequentialGroup()
+                        .add(NameLabel, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
+                        .add(jLabel5, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 21, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
+                    .add(org.jdesktop.layout.GroupLayout.LEADING, parkingRegistrationPanelLayout.createSequentialGroup()
+                        .add(contactNoLabel, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
+                        .add(jLabel2, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 21, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
+                    .add(parkingRegistrationPanelLayout.createSequentialGroup()
+                        .add(parkingRegistrationPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.TRAILING)
+                            .add(org.jdesktop.layout.GroupLayout.LEADING, parkingRegistrationPanelLayout.createSequentialGroup()
+                                .add(EmailIdLabel, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
+                                .add(jLabel3, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 21, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
+                            .add(parkingRegistrationPanelLayout.createSequentialGroup()
+                                .add(vehicleIdLabel, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
+                                .add(jLabel1, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 21, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)))
+                        .add(27, 27, 27)))
+                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
+                .add(parkingRegistrationPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+                    .add(parkingRegistrationPanelLayout.createSequentialGroup()
+                        .add(backButton, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 120, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
+                        .add(39, 39, 39)
+                        .add(resetFieldButton, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 122, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
+                        .add(33, 33, 33)
+                        .add(submitButton, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 109, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
+                        .addContainerGap(31, Short.MAX_VALUE))
+                    .add(parkingRegistrationPanelLayout.createSequentialGroup()
+                        .add(25, 25, 25)
+                        .add(parkingRegistrationPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+                            .add(vehicleIdField)
+                            .add(nameField)
+                            .add(issueDate, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .add(emailidField)
+                            .add(expiryDate, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .add(contactnoField))
+                        .add(28, 28, 28)
+                        .add(resetexpDatebutton, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 63, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
+                        .add(66, 66, 66))))
+            .add(parkingRegistrationPanelLayout.createSequentialGroup()
+                .add(34, 34, 34)
+                .add(jLabel7, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 10, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
+                .add(jLabel6, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 298, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
+                .add(0, 0, Short.MAX_VALUE))
         );
         parkingRegistrationPanelLayout.setVerticalGroup(
             parkingRegistrationPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
             .add(parkingRegistrationPanelLayout.createSequentialGroup()
-                .add(43, 43, 43)
+                .add(26, 26, 26)
+                .add(parkingRegistrationPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.BASELINE)
+                    .add(jLabel7, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 20, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
+                    .add(jLabel6, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .add(33, 33, 33)
                 .add(parkingRegistrationPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.BASELINE)
                     .add(vehicleIdLabel)
-                    .add(vehicleIdField, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
+                    .add(vehicleIdField, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
+                    .add(jLabel1))
                 .add(20, 20, 20)
                 .add(parkingRegistrationPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.BASELINE)
                     .add(NameLabel)
-                    .add(nameField, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
+                    .add(nameField, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
+                    .add(jLabel5))
                 .add(25, 25, 25)
                 .add(parkingRegistrationPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.BASELINE)
                     .add(contactNoLabel)
-                    .add(contactnoField, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
+                    .add(contactnoField, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
+                    .add(jLabel2))
                 .add(28, 28, 28)
                 .add(parkingRegistrationPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.BASELINE)
                     .add(EmailIdLabel)
-                    .add(emailidField, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
+                    .add(emailidField, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
+                    .add(jLabel3))
                 .add(30, 30, 30)
                 .add(parkingRegistrationPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
                     .add(issueDatelabel)
@@ -199,17 +269,19 @@ public class Registry extends javax.swing.JFrame {
                 .add(parkingRegistrationPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
                     .add(parkingRegistrationPanelLayout.createSequentialGroup()
                         .add(parkingRegistrationPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-                            .add(expiryDateLabel)
+                            .add(parkingRegistrationPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.BASELINE)
+                                .add(expiryDateLabel)
+                                .add(jLabel4))
                             .add(expiryDate, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
-                        .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED, 43, Short.MAX_VALUE)
+                        .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED, 51, Short.MAX_VALUE)
                         .add(parkingRegistrationPanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.BASELINE)
-                            .add(resetFieldButton)
                             .add(submitButton)
-                            .add(backButton, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 27, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
-                        .add(22, 22, 22))
+                            .add(resetFieldButton)
+                            .add(backButton, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 27, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)))
                     .add(parkingRegistrationPanelLayout.createSequentialGroup()
                         .add(resetexpDatebutton)
-                        .addContainerGap(org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
+                        .add(0, 0, Short.MAX_VALUE)))
+                .addContainerGap())
         );
 
         org.jdesktop.layout.GroupLayout layout = new org.jdesktop.layout.GroupLayout(getContentPane());
@@ -219,14 +291,14 @@ public class Registry extends javax.swing.JFrame {
             .add(layout.createSequentialGroup()
                 .addContainerGap()
                 .add(parkingRegistrationPanel, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(19, Short.MAX_VALUE))
+                .addContainerGap(20, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
             .add(layout.createSequentialGroup()
                 .addContainerGap()
                 .add(parkingRegistrationPanel, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(27, Short.MAX_VALUE))
+                .addContainerGap(15, Short.MAX_VALUE))
         );
 
         pack();
@@ -284,6 +356,13 @@ public class Registry extends javax.swing.JFrame {
     private javax.swing.JLabel expiryDateLabel;
     public com.toedter.calendar.JDateChooser issueDate;
     private javax.swing.JLabel issueDatelabel;
+    private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel3;
+    private javax.swing.JLabel jLabel4;
+    private javax.swing.JLabel jLabel5;
+    private javax.swing.JLabel jLabel6;
+    private javax.swing.JLabel jLabel7;
     public javax.swing.JTextField nameField;
     public javax.swing.JPanel parkingRegistrationPanel;
     public javax.swing.JButton resetFieldButton;
