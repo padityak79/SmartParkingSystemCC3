@@ -5,12 +5,15 @@
  */
 package parkingsystem;
 
+import java.lang.*;
+
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.Timer;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -28,6 +31,26 @@ import java.util.regex.*;
  *
  * @author user
  */
+
+class callEmail extends Thread {
+
+    int type;
+    parkingSlot newParkingSlot;
+    
+    callEmail(int type, parkingSlot newParkingSlot) {
+        this.type = type;
+        this.newParkingSlot = newParkingSlot;
+    }
+    
+    public void run() {
+        try {
+                EmailService.sendEmail(this.type,this.newParkingSlot);
+        } catch(Exception e) {
+                System.out.println(e.getMessage());
+        }
+    }
+} 
+
 
 public class Parkingsystem extends JFrame implements ActionListener{
 
@@ -52,11 +75,25 @@ public class Parkingsystem extends JFrame implements ActionListener{
             }            
             ParkingLot.add(row);
         }
+        startCheck();
     }
     
+    Timer checkStatusTimer = new Timer(5000, new ActionListener() {
+        public void actionPerformed(ActionEvent e) {
+            for(int i = 0; i < parkedSlots.size(); i++) {
+                if(parkedSlots.get(i).filled && parkedSlots.get(i).getExpiryDate().compareTo(new Date()) < 0 && !isRecorded.get(i)) {
+                    JOptionPane.showMessageDialog(null,parkedSlots.get(i).getVehicleId() + " expired on " + parkedSlots.get(i).getExpiryDate() + "\n Name : " + parkedSlots.get(i).getName() + "  Contact Number : " + parkedSlots.get(i).getContactNo(),"Expired registration!!", JOptionPane.INFORMATION_MESSAGE);            
+                    Thread emailFunction = new Thread(new callEmail(2,parkedSlots.get(i))); 
+                    emailFunction.start();
+                    isRecorded.set(i,true);
+                }
+            }
+        }
+    });
+        
     public static void main(String[] args) {
         // TODO code application logic here
-       new Parkingsystem();     
+       new Parkingsystem();  
     }
 
     @Override
@@ -87,18 +124,22 @@ public class Parkingsystem extends JFrame implements ActionListener{
             
             parkConfiguration.confirmChangesButton.addActionListener( new ActionListener() {
                 public void actionPerformed(ActionEvent evt) {
+                    stopCheck();
                     int j = 0, sz = parkedSlots.size();
                     for(int i = 0; i < sz; i++) {
                         if((boolean)parkConfiguration.model.getValueAt(i,4)) {
                             String parkingId = parkConfiguration.model.getValueAt(i,0).toString();
                             int x = Character.getNumericValue(parkingId.charAt(0)), y = Character.getNumericValue(parkingId.charAt(2));
+                            Thread emailFunction = new Thread(new callEmail(3,parkedSlots.get(i-j))); 
+                            emailFunction.start();
                             parkedSlots.remove(i-j);
                             ParkingLot.get(x).set(y,new parkingSlot(Integer.toString(x) + "-" + Integer.toString(y)));
                             availableSlots.add(new Point(x,y));
+                            isRecorded.set(i-j,false);
                             j++;
                         }
                     }
-                    System.out.println(parkedSlots);
+//                    System.out.println(parkedSlots);
                     int[] options = {2,3,4,5,6,7,8};
                     if( nRows != options[parkConfiguration.rowComboBox.getSelectedIndex()] || nCols != options[parkConfiguration.colComboBox.getSelectedIndex()]) {
                         nRows = options[parkConfiguration.rowComboBox.getSelectedIndex()];
@@ -106,6 +147,7 @@ public class Parkingsystem extends JFrame implements ActionListener{
                         maxDays = Integer.parseInt(parkConfiguration.maxTimeTextField.getText());
                         constructPark();
                     }
+                    startCheck();
                     parkConfiguration.dispose();
                 }
             });
@@ -116,6 +158,7 @@ public class Parkingsystem extends JFrame implements ActionListener{
                     extensionPane.setVisible(true);
                     extensionPane.doneButton.addActionListener( new ActionListener() {
                         public void actionPerformed(ActionEvent evt) {
+                            stopCheck();
                             String parkingId = extensionPane.parkingSlotField.getText();
                             for(parkingSlot slot : parkedSlots) {
                                 if(slot.getParkingId().equals(parkingId)) {
@@ -124,10 +167,13 @@ public class Parkingsystem extends JFrame implements ActionListener{
                                     parkConfiguration.fillTable(parkedSlots);
                                     int x = Character.getNumericValue(parkingId.charAt(0)), y = Character.getNumericValue(parkingId.charAt(2));
                                     ParkingLot.get(x).set(y,slot);
+                                    Thread emailFunction = new Thread(new callEmail(1,slot)); 
+                                    emailFunction.start();
                                     break;
                                 }
                             }
                             extensionPane.dispose();
+                            startCheck();
                         }
                     });
             
@@ -171,7 +217,9 @@ public class Parkingsystem extends JFrame implements ActionListener{
             
             registryWindow.submitButton.addActionListener(new ActionListener() {
                 public void actionPerformed(ActionEvent evt) {
-                    if(performValidations( registryWindow.nameField.getText(), registryWindow.contactnoField.getText(), registryWindow.vehicleIdField.getText(), registryWindow.emailidField.getText())) {
+                    ArrayList<Integer> invalidEntries = performValidations( registryWindow.nameField.getText(), registryWindow.contactnoField.getText(), registryWindow.vehicleIdField.getText(), registryWindow.emailidField.getText());
+                    if(invalidEntries.size() == 0) {
+                        stopCheck();
                         fillParkingSlot( true, registryWindow.nameField.getText(), registryWindow.contactnoField.getText(), registryWindow.vehicleIdField.getText(), registryWindow.emailidField.getText(), registryWindow.expiryDate.getDate());
                         registryWindow.nameField.setText("");
                         registryWindow.vehicleIdField.setText("");
@@ -180,13 +228,14 @@ public class Parkingsystem extends JFrame implements ActionListener{
                         registryWindow.issueDate.setDate(new Date());
                         registryWindow.expiryDate.setDate(new Date());
                         registryWindow.dispose();
+                        startCheck();
                     } else {
-                        registryWindow.nameField.setText("");
-                        registryWindow.vehicleIdField.setText("");
-                        registryWindow.contactnoField.setText("");     
-                        registryWindow.emailidField.setText("");
-                        registryWindow.issueDate.setDate(new Date());
-                        registryWindow.expiryDate.setDate(new Date());
+                        for(int i = 0; i < invalidEntries.size(); i++) {
+                            if(invalidEntries.get(i) == 1) registryWindow.nameField.setText("");
+                            if(invalidEntries.get(i) == 2)registryWindow.contactnoField.setText(""); 
+                            if(invalidEntries.get(i) == 3)registryWindow.vehicleIdField.setText("");    
+                            if(invalidEntries.get(i) == 4)registryWindow.emailidField.setText("");
+                        }
                     }
                 }
             });
@@ -253,8 +302,16 @@ public class Parkingsystem extends JFrame implements ActionListener{
     bookingExtensionPane extensionPane;
     ArrayList<ArrayList<parkingSlot> > ParkingLot = new ArrayList<ArrayList<parkingSlot>>();
     ArrayList<parkingSlot> parkedSlots = new ArrayList<parkingSlot>();
+    ArrayList<Boolean> isRecorded = new ArrayList<Boolean>();
     Queue<Point> availableSlots = new LinkedList<>();
     
+    public void startCheck() {
+        checkStatusTimer.start();
+    }
+    
+    public void stopCheck() {
+        checkStatusTimer.stop();
+    }
     
     //functions
     public void fillParkingSlot(Boolean filled, String name, String contactNo, String vehicleId, String emailId, Date expiryDate) {
@@ -266,6 +323,9 @@ public class Parkingsystem extends JFrame implements ActionListener{
             ParkingLot.get(x).set(y,newparkingSlot);
             parkedSlots.add(newparkingSlot);
             sortParkedSlots(parkedSlots);
+            isRecorded.add(false);
+            Thread emailFunction = new Thread(new callEmail(0,newparkingSlot)); 
+            emailFunction.start(); 
             return;
         } 
     }
@@ -274,6 +334,7 @@ public class Parkingsystem extends JFrame implements ActionListener{
     public void constructPark() {
         ParkingLot.clear();
         availableSlots.clear();
+        isRecorded.clear();
         for(int i = 0; i < nRows; i++) {
             ArrayList<parkingSlot> row = new ArrayList<parkingSlot>();
             for(int j = 0; j < nCols; j++) {
@@ -292,13 +353,13 @@ public class Parkingsystem extends JFrame implements ActionListener{
     }
     
     
-    public boolean performValidations(String name, String contactNo, String vehicleID, String emailId) {
-        boolean validationSuccess = true;
+    public ArrayList<Integer> performValidations(String name, String contactNo, String vehicleID, String emailId) {
+        ArrayList<Integer> invalidInfo = new ArrayList<Integer>();
         String regx = "^[\\p{L} .'-]+$";
         Pattern p = Pattern.compile(regx);
         Matcher m = p.matcher(name);
         if(!m.matches()) {
-            validationSuccess = false;
+            invalidInfo.add(1);
             JOptionPane.showMessageDialog(null,"Invalid Name. \n (1) Name should not be empty\n (2) All words start with capital Letters\n (3) No Special Characters\n (4) No digits\n", "Validation Error!!", JOptionPane.ERROR_MESSAGE);            
         } 
         
@@ -306,7 +367,7 @@ public class Parkingsystem extends JFrame implements ActionListener{
         p = Pattern.compile(regx);
         m = p.matcher(contactNo);
         if(!m.matches()) {  
-            validationSuccess = false;
+            invalidInfo.add(2);
             JOptionPane.showMessageDialog(null,"Invalid Phone Number. \n (1) Phone Number should not be empty\n (2) The Phone Number should be 10 digits long\n Please check your Phone number and try again.\n", "Validation Error!!", JOptionPane.ERROR_MESSAGE);            
         }
         
@@ -314,7 +375,7 @@ public class Parkingsystem extends JFrame implements ActionListener{
         p = Pattern.compile(regx);
         m = p.matcher(vehicleID);
         if(!m.matches()) {
-            validationSuccess = false;
+            invalidInfo.add(3);
             JOptionPane.showMessageDialog(null,"Invalid Vehicle ID. \nVehicle ID should be of the format: MH(State Code)01(District Number) AW(series of RTO) 0121(Random Number)\n", "Validation Error!!", JOptionPane.ERROR_MESSAGE);            
         }
         
@@ -322,9 +383,9 @@ public class Parkingsystem extends JFrame implements ActionListener{
         p = Pattern.compile(regx,Pattern.CASE_INSENSITIVE);
         m = p.matcher(emailId);
         if(!m.matches()) {
-            validationSuccess = false;
+            invalidInfo.add(4);
             JOptionPane.showMessageDialog(null,"Invalid Email Id. \nPlease try Again!!","Warning configuration!!", JOptionPane.ERROR_MESSAGE); 
         }
-        return validationSuccess;
+        return invalidInfo;
     } 
 } 

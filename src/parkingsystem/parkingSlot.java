@@ -40,6 +40,10 @@ public class parkingSlot {
         this.expiryDate = expiryDate;
     }
     
+    public String getEmailId() {
+        return this.emailId;
+    }
+    
     public String getParkingId() {
         return this.parkingId;
     }
